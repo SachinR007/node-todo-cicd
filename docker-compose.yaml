@@ -2,6 +2,6 @@ version: '3.9'
 
 services:
   web:
-    build: sachin2802/todo-app:latest
+    image: sachin2802/todo-app:latest
     ports:
       - "8000:8000"
