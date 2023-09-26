@@ -10,16 +10,29 @@ pipeline {
         stage('build')
         {
             steps{
-                sh 'docker build -t todo-app .'
+                sh 'docker build -t sachin2802/todo-app:latest .'
             }
         }
         
-        stage('deploy'){
+        stage('Push to dockerhub')
+        {
             steps{
-                sh 'docker run -it -d -p 8000:8000 todo-app'
+                
+             withCredentials([usernamePassword(credentialsId: 'DockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+                 
+                 sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+                  sh "docker push ${env.dockerHubUser}/todo-app:latest"
+             }
+                
             }
+        }
+        
+        stage('deploy')
+        {
+            sh "docker-compose down && docker-compose up -d"
             
         }
+        
         
     }
 }
